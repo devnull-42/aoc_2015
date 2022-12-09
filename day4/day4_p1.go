@@ -1,0 +1,34 @@
+package main
+
+import (
+	"bufio"
+	"crypto/md5"
+	"encoding/hex"
+	"fmt"
+	"os"
+	"strings"
+)
+
+func main() {
+	file, _ := os.Open("input.txt")
+	fs := bufio.NewScanner(file)
+	fs.Split(bufio.ScanWords)
+	fs.Scan()
+
+	secret := fs.Text()
+	i := 1
+
+	for {
+		val := fmt.Sprintf("%s%d", secret, i)
+		h := md5.New()
+		h.Write([]byte(val))
+		valHex := hex.EncodeToString(h.Sum(nil))
+
+		if strings.HasPrefix(valHex, "00000") {
+			break
+		}
+		i++
+	}
+
+	fmt.Printf("day4 part1: %d\n", i)
+}
